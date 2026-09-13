@@ -29,6 +29,7 @@ class SerialPortManager : public ServerManager {
     private:
 
     QSerialPort *_port = nullptr;
+    QByteArray _buffer;
 };
 
 #endif // SERIALPORTMANAGER_H

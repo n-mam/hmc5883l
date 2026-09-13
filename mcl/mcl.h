@@ -180,13 +180,13 @@ inline void initialize_logging(mcl::log::level l) {
         [](int level, int sink, auto log) {
             if (sink == mcl::log::sink::net) {
                 #if defined (PICO_CYW43_SUPPORTED)
-                getInstance<tcp::server>()->
-                    send_data(log.c_str(), log.size());
+                getInstance<tcp::server>()->send_data(
+                    log.c_str(), log.size());
                 cyw43_poll();
                 #endif
             } else if (sink == mcl::log::sink::uart) {
                 #if defined(STM32F446xx)
-                p_serial->transmit((const uint8_t *)log.c_str(), log.size());
+                p_serial->transmit((const uint8_t *)(log + "\n").c_str(), log.size());
                 #elif defined(STM32H7)
                 // only for F446RE which has usb
                 // to usart bridge over stlink.
@@ -195,8 +195,6 @@ inline void initialize_logging(mcl::log::level l) {
             } else if (sink == mcl::log::sink::con) {
                 #if defined (PICO_CYW43_SUPPORTED)
                 nanomsg::write_nano_msg_log(log.c_str(), mcl::log::sink::net);
-                #elif defined (STM32F411xE)
-                //cdc_write_data(log.c_str(), log.size());
                 #elif defined (STM32F446xx)
                 p_serial->transmit((const uint8_t *)(log + "\n").c_str(), log.size() + 1);
                 #else
@@ -205,10 +203,6 @@ inline void initialize_logging(mcl::log::level l) {
             } else if (sink == mcl::log::sink::c2c) {
                 #if defined (STM32) && defined (STM32H7)
                 ipc_send_message(log);
-                #endif
-            } else if (sink == mcl::log::sink::cdc) {
-                #if defined (STM32F411xE)
-                //cdc_write_data(log.c_str(), log.size());
                 #endif
             } else if (sink == mcl::log::sink::spi) {
                 // todo
@@ -280,19 +274,6 @@ inline void test_network_nanopb() {
         nanomsg::write_nano_msg_a("hello from pico !", mcl::log::sink::net);
         nanomsg::write_nano_msg_b(counter++, mcl::log::sink::net);
         nanomsg::write_nano_msg_c(flag = !flag, mcl::log::sink::net);
-        mcl::sleep_ms(1000);
-    }
-    #endif
-}
-
-inline void test_cdc_nanopb() {
-    #if defined (STM32)
-    bool flag = false;
-    uint32_t counter = 1;
-    while (true) {
-        nanomsg::write_nano_msg_a("hello from stm32 !", mcl::log::sink::cdc);
-        nanomsg::write_nano_msg_b(counter++, mcl::log::sink::cdc);
-        nanomsg::write_nano_msg_c(flag = !flag, mcl::log::sink::cdc);
         mcl::sleep_ms(1000);
     }
     #endif

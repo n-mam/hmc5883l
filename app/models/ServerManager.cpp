@@ -24,7 +24,11 @@ ServerManager::~ServerManager() {
 void ServerManager::sendMessage(QString message) {
     // nanomsg::write_nano_msg_b(123);
     // nanomsg::write_nano_msg_c(true);
-    nanomsg::write_nano_msg_a(message.toStdString().c_str(), mcl::log::sink::net, this);
+    if (m_encode) { //regression: todo expose a nanopb encode checkbox
+        nanomsg::write_nano_msg_a(message.toStdString().c_str(), mcl::log::sink::net, this);
+    } else {
+        PBMSG(mcl::log::sink::net, this) << message.toStdString();
+    }
 }
 
 void ServerManager::sendKeyValue(uint32_t key, float value) {
@@ -88,6 +92,17 @@ QString ServerManager::getLocalIPAddress() {
         }
     }
     return "";
+}
+
+bool ServerManager::getEncode() {
+    return m_encode;
+}
+
+void ServerManager::setEncode(bool encode) {
+    if (encode != m_encode) {
+        m_encode = encode;
+        emit encodeChanged();
+    }
 }
 
 bool ServerManager::getDecode() {

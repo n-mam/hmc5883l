@@ -44,7 +44,7 @@ void SerialPortManager::disconnect() {
 
 void SerialPortManager::transportSink(const std::string& log) {
     if (_port) {
-        _port->write((log + "xxx").c_str(), (log + "xxx").size());
+        _port->write((log + "\r\n").c_str(), log.size() + 2);
         _port->waitForBytesWritten(-1);
     } else {
         LOG << "serial port not connected";
@@ -52,9 +52,14 @@ void SerialPortManager::transportSink(const std::string& log) {
 }
 
 void SerialPortManager::onReadyRead() {
-    QByteArray buffer = _port->readAll();
-    if (buffer.isEmpty()) return;
-    ServerManager::processData(buffer);
+    _buffer.append(_port->readAll());
+    int newlineIndex;
+    while ((newlineIndex = _buffer.indexOf('\n')) != -1) {
+        QByteArray line = _buffer.left(newlineIndex + 1);
+        _buffer.remove(0, newlineIndex + 1);
+        line = line.trimmed();
+        ServerManager::processData(line);
+    }
 }
 
 void SerialPortManager::onErrorOccurred(QSerialPort::SerialPortError error) {

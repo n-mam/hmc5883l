@@ -14,8 +14,6 @@
   be accounted for.
 - MPU6050 + HMC5883L test streams raw data over uart which can then be used for visualizing
   mahony absolute orientation filter (vtk implementation in the offset repo)
-- Dont use the app folder; that has very old code; any desktop based telemetry/visualization
-  would be in the offset repo
 ```
 ### FOC - current, speed and position control
 ```
@@ -34,7 +32,8 @@
 - Space vector PWM modulation with sector-based duty cycle computation
 - Encoder calibration: detects electrical direction (sign) and zero offset
 - Open-loop V/F drive mode (vfd.h) is an independent control path
-- command and control over STM32 VCP UART (use termite or equivalent client app)
+- command and control over STM32 VCP UART (use the qml app or equivalent
+  client app like termite)
 - pi_plotter.py for PI graph visualizations
 ```
 ```
@@ -48,7 +47,7 @@ waiting for new action.. -1
 waiting for new action.. -1
 waiting for new action.. -1
 waiting for new action.. -1
-Invoke action 24 for foc or 23 for vfd
+Invoke action 23 for foc or 22 for vfd
 action:24
 at this point you could independently switch/control either speed or theposition
 s_ref:5
