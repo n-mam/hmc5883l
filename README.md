@@ -60,6 +60,8 @@ p_ref_0
 invoke action 21 for mahony filter test. Close termite and the open offset's
 vtk tab and connect to the VCP port IMU stream. This would load the aircraft model
 ```
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/7abdfbbb-c486-4ebb-9208-12562a59b05c" />
+
 #### Setup
 ```
 Download and unzip arm-none-eabi toolchain.
