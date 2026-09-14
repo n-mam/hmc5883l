@@ -54,6 +54,15 @@ Item {
                     manager = netManager
                 }
             }
+            CheckBox {
+                id: npbEncode
+                z: 2
+                checked: manager.encode
+                text: qsTr("nanopb")
+                onCheckedChanged: {
+                    manager.encode = checked
+                }
+            }
         }
         Row {
             spacing: 4

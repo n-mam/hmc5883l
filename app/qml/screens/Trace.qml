@@ -7,6 +7,7 @@ Item {
     required property var manager;
     Rectangle {
         id: status
+        z: 100
         width: 20
         height: 12
         radius: 2
@@ -100,7 +101,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
             }
             CheckBox {
-                id: nanopb
+                id: npbDecode
                 z: 2
                 checked: manager.decode
                 anchors.topMargin: 3
